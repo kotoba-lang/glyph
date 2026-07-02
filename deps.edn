@@ -1,0 +1,17 @@
+{:paths ["src" "resources"]
+ ;; Zero-dep, portable .cljc. `kotoba.glyph.*` is the CPU-side SDF text-layout
+ ;; CONTRACT ported from kami-text (Rust, deleted-not-migrated per
+ ;; ADR-2607010930 Phase 4): glyph classification, grapheme/script
+ ;; segmentation, atlas rect packing, instanced-quad layout math, and
+ ;; capacity/LRU glyph-set management. No font parsing, no rasterization,
+ ;; no GPU — those stay host/platform adapter concerns (see README).
+ :deps {}
+ :aliases
+ {:test {:extra-paths ["test"]
+         :extra-deps {io.github.cognitect-labs/test-runner
+                      {:git/tag "v0.5.1" :git/sha "dfb30dd"}}
+         :main-opts ["-m" "cognitect.test-runner"]
+         :exec-fn cognitect.test-runner.api/test}
+  :lint {:replace-deps {clj-kondo/clj-kondo {:mvn/version "2024.11.14"}}
+         :main-opts ["-m" "clj-kondo.main" "--lint" "src" "test"
+                     "--fail-level" "error"]}}}
