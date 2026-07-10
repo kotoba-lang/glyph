@@ -4,6 +4,13 @@
   kami-text (Rust) source; see resources/kotoba/glyph/constants.edn for the
   Rust symbol each entry mirrors.
 
+  `resources/kotoba/glyph/constants.edn` is stored as a Datomic/Datascript
+  tx-data vector (`[{:db/id -1 :glyph.constants/cjk-ranges ... ...}]`,
+  non-scalar values pr-str'd into blob strings — see `schema.edn` at repo
+  root) so the constants are independently query-able as data; `registry`
+  reconstitutes it back into the original bare-keyword map shape below so
+  every downstream `kotoba.glyph.*` namespace keeps working unchanged.
+
   Loading is JVM-only (`slurp`/`io/resource`, guarded behind `#?(:clj ...)`
   so ClojureScript compilation still resolves cleanly); a ClojureScript
   build should bundle/inline `resources/kotoba/glyph/constants.edn` at
@@ -14,11 +21,30 @@
 
 (def registry-resource "kotoba/glyph/constants.edn")
 
+#?(:clj
+   (defn- unblob
+     "Non-scalar attribute values are stored pr-str'd (blob string). Parse
+     them back to data; scalar/collection-of-scalar values pass through."
+     [v]
+     (if (string? v)
+       (try (let [parsed (edn/read-string v)] (if (coll? parsed) parsed v))
+            (catch Exception _ v))
+       v)))
+
+#?(:clj
+   (defn- reconstitute-entity
+     "tx-data `[{:db/id -1 :glyph.constants/<k> <v> ...}]` -> the original
+     bare-keyword map `{<k> <v> ...}` (strips the :glyph.constants/ ns,
+     un-blobs pr-str'd values)."
+     [tx-data]
+     (into {} (map (fn [[k v]] [(keyword (name k)) (unblob v)]))
+           (dissoc (first tx-data) :db/id))))
+
 (defn registry
   "Load the glyph constants registry (character ranges, atlas packing
   ratios, capacity floors, pinned entries, layout fallback ratios). JVM-only."
   []
-  #?(:clj (edn/read-string (slurp (io/resource registry-resource)))
+  #?(:clj (reconstitute-entity (edn/read-string (slurp (io/resource registry-resource))))
      :cljs (throw (ex-info "kotoba.glyph.constants/registry is JVM-only; bundle resources/kotoba/glyph/constants.edn at build time for ClojureScript" {}))))
 
 (def defaults
