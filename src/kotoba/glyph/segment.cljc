@@ -10,7 +10,7 @@
   indicator flag pairs) rather than a full table-driven implementation, and
   `segment-paragraph-runs` does not apply UAX#9 bidi *visual* reordering —
   runs are produced in logical order with correct per-run `:direction`."
-  (:require [clojure.string :as str]
+  (:require [kotoba.lang.text :as str]
             [kotoba.glyph.slot :as slot]
             [kotoba.glyph.text :as text]))
 

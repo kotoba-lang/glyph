@@ -1,5 +1,5 @@
 (ns kotoba.glyph.segment-test
-  (:require [clojure.string :as str]
+  (:require [kotoba.lang.text :as str]
             [clojure.test :refer [deftest is]]
             [kotoba.glyph.segment :as seg]))
 
