@@ -1,5 +1,5 @@
 (ns kotoba.glyph.slot-test
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [kotoba.glyph.slot :as slot]))
 
 (deftest classification-predicates
