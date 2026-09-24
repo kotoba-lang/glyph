@@ -1,5 +1,5 @@
 (ns kotoba.glyph.dynamic-test
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [kotoba.glyph.dynamic :as dyn]))
 
 (deftest ensure-keys-grows-and-reports-changed

@@ -1,5 +1,5 @@
 (ns kotoba.glyph.layout-test
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [kotoba.glyph.atlas :as atlas]
             [kotoba.glyph.layout :as layout]))
 
