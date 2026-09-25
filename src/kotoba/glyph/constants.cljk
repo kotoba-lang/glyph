@@ -17,7 +17,7 @@
   build time (e.g. via a `defmacro` that slurps it at macro-expansion
   time) instead of calling `registry` at runtime."
   #?(:clj (:require [kotoba.lang.edn :as edn]
-                     [clojure.java.io :as io])))
+                     [kotoba.io :as io])))
 
 (def registry-resource "kotoba/glyph/constants.edn")
 
